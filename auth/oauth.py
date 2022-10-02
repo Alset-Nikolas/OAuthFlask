@@ -9,6 +9,7 @@ class OAuthSignIn(object):
         credentials = current_app.config["OAUTH_CREDENTIALS"][provider_name]
         self.consumer_id = credentials["id"]
         self.consumer_secret = credentials["secret"]
+        self.service = None
 
     def authorize(self):
         pass
