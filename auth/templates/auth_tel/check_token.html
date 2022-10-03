@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    <title>Github OAuth</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> <!-- load bulma css -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        body        { padding-top:70px; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="jumbotron text-center text-primary">
+        <form action="/check_tel" method='POST'>
+            {% if er %}
+                {{ er }}
+            {% endif %}
+            <h1>Auth Tel</h1>
+            <input  type="text" id="token" name="token" required>
+            <button>Отправить токен</button>
+            
+        </form>
+        <a href="/send_sms" class="btn btn-danger m-4">Повторно отправить код</a>
+    </div>
+
+</div>
+</body>
+</html>

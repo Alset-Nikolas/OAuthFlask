@@ -35,6 +35,15 @@
             Yandex Login
         </a>
     </div>
+
+    <div class="jumbotron text-center text-primary">
+        <form action="/send_sms" method='POST'>
+            <h1>Registration</h1>
+            <input type="tel" id="phone" name="phone" pattern="7[0-9]{10}" placeholder="7xxxxxxxxxx" required>
+            <button>Отправить код на телефон</button>
+        </form>
+    </div>
+
 </div>
 </body>
 </html>
