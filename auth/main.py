@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request
 from oauth import OAuthSignIn
-
+from auth_vk import VkSignIn
+from auth_github import GithubSignIn
+from auth_yandex import YandexSignIn
+import typing
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "top secret!"
@@ -17,6 +20,8 @@ app.config["OAUTH_CREDENTIALS"] = {
     },
 }
 
+TYPE_OAUTH = typing.Union[YandexSignIn, VkSignIn, GithubSignIn]
+
 
 @app.route("/")
 def index():
@@ -25,14 +30,14 @@ def index():
 
 @app.route("/authorize/<provider>")
 def oauth_authorize(provider):
-    oauth = OAuthSignIn.get_provider(provider)
+    oauth: TYPE_OAUTH = OAuthSignIn.get_provider(provider)
     return oauth.authorize()
 
 
 @app.route("/callback/<provider>")
 def oauth_callback(provider):
-    oauth = OAuthSignIn.get_provider(provider)
-    userData = oauth.callback()
+    oauth: TYPE_OAUTH = OAuthSignIn.get_provider(provider)
+    userData: typing.Dict = oauth.callback()
     return render_template(f"{provider}_auth.html", userData=userData)
 
 
