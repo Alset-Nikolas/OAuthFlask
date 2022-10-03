@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from fastapi import FastAPI
 from oauth import OAuthSignIn
 from auth_vk import VkSignIn
 from auth_github import GithubSignIn
@@ -7,7 +8,6 @@ import typing
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "top secret!"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 app.config["OAUTH_CREDENTIALS"] = {
     "github": {
         "id": "d0219664ea47d1e305f7",
