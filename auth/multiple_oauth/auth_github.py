@@ -1,7 +1,7 @@
 from rauth import OAuth2Service
 from flask import request, redirect
 from rauth.compat import parse_qsl
-from oauth import OAuthSignIn
+from multiple_oauth.oauth import OAuthSignIn
 
 
 class GithubSignIn(OAuthSignIn):
@@ -46,6 +46,7 @@ class GithubSignIn(OAuthSignIn):
             return None, None, None
 
         request_token = request.args["code"]
+        print(request_token)
         data = {
             "code": request.args["code"],
             "grant_type": "authorization_code",
@@ -53,6 +54,7 @@ class GithubSignIn(OAuthSignIn):
         }
 
         oauth_session = self.service.get_auth_session(data=data, decoder=parse_utf8_qsl)
+        
         user_info = oauth_session.get(
             self.service.base_url, params={"format": "json"}
         ).json()

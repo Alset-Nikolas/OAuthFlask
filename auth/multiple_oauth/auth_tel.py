@@ -1,4 +1,3 @@
-api_id = "E021CCF2-76F5-08B8-FD88-1D7FE93C87C6"
 import dataclasses
 import requests
 import logging
@@ -57,6 +56,8 @@ def get_token():
 
 
 if __name__ == "__main__":
+    api_id = "E021CCF2-76F5-08B8-FD88-1D7FE93C87C6"
+
     sms = SMSTransport(api_id)
     result = sms.send("79651091961", "hello")
 

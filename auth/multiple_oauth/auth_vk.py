@@ -1,6 +1,6 @@
 from rauth import OAuth2Service
 from flask import request, redirect
-from oauth import OAuthSignIn
+from multiple_oauth.oauth import OAuthSignIn
 import json
 import requests
 import typing
@@ -66,7 +66,7 @@ class VkSignIn(OAuthSignIn):
     def vk_auth(self, access_token: str) -> typing.Dict:
         auth = "https://api.vk.com/method/users.get"
         auth_param = {
-            "fields": "uid,login,first_name,last_name,screen_name,has_mobile,bdate,photo_max_orig,mail,email",
+            "fields": "login,photo_max_orig,mail,email,mobile_phone,contacts",
             "access_token": access_token,
             "scope": "email,offline",
             "v": 5.124,

@@ -1,12 +1,14 @@
-from crypt import methods
-from flask import Flask, render_template, request, redirect
-from oauth import OAuthSignIn
-from auth_vk import VkSignIn
-from auth_github import GithubSignIn
-from auth_yandex import YandexSignIn
+from flask import Flask, render_template, request, redirect, session
 import typing
-from auth_tel import get_token, SMSTransport, TSMSResponse
 
+from multiple_oauth.oauth import OAuthSignIn
+from multiple_oauth.auth_vk import VkSignIn
+from multiple_oauth.auth_github import GithubSignIn
+from multiple_oauth.auth_yandex import YandexSignIn
+from multiple_oauth.auth_tel import get_token, SMSTransport, TSMSResponse
+
+from db import init_db
+import models.users as model_users
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "top secret!"
@@ -34,8 +36,9 @@ def index():
 def send_sms():
     code: str = get_token()
     tel: str = request.form.get("phone")
-    sms: SMSTransport = SMSTransport(app.config["TOKEN_TEL"])
-    result: TSMSResponse = sms.send(tel, code)
+    session['tel'] = tel
+    # sms: SMSTransport = SMSTransport(app.config["TOKEN_TEL"])
+    # result: TSMSResponse = sms.send(tel, code)
     return redirect("/check_tel")
 
 
@@ -44,6 +47,7 @@ def registration_tel():
     code: str = get_token()
     if request.method == "POST":
         if request.form.get("token") == code:
+            model_users.update_user({"tel": session['tel']}, 'tel')
             return "OK"
         return render_template(f"auth_tel/check_token.html", er="Неправильный токен")
     return render_template(f"auth_tel/check_token.html")
@@ -58,9 +62,13 @@ def oauth_authorize(provider):
 @app.route("/callback/<provider>")
 def oauth_callback(provider):
     oauth: TYPE_OAUTH = OAuthSignIn.get_provider(provider)
-    userData: typing.Dict = oauth.callback()
-    return render_template(f"{provider}_auth.html", userData=userData)
+    user_data: typing.Dict = oauth.callback()
+    model_users.update_user(user_data, provider)
+    return render_template(f"{provider}_auth.html", userData=user_data)
 
 
 if __name__ == "__main__":
+    init_db()
+    
     app.run(debug=True)
+    
