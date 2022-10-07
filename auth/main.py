@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 import typing
-from auth.models import UserModel
+from models import UserModel
 
 from multiple_oauth.oauth import OAuthSignIn
 from multiple_oauth.auth_vk import VkSignIn
@@ -28,12 +28,6 @@ app.config["OAUTH_CREDENTIALS"] = {
 app.config["TOKEN_TEL"] = "E021CCF2-76F5-08B8-FD88-1D7FE93C87C6"
 TYPE_OAUTH = typing.Union[YandexSignIn, VkSignIn, GithubSignIn]
 
-
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-
 # --------------- TELEPHONE api ------------------
 @app.route("/send_sms", methods=["GET", "POST"])
 def send_sms():
@@ -54,8 +48,14 @@ def registration_tel():
             return "OK"
         return render_template(f"auth_tel/check_token.html", er="Неправильный токен")
     return render_template(f"auth_tel/check_token.html")
+# ------------------------------------------------------------------------------------------
 
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+    
 @app.route("/authorize/<provider>")
 def oauth_authorize(provider):
     oauth: TYPE_OAUTH = OAuthSignIn.get_provider(provider)
@@ -78,7 +78,7 @@ def get_user(id):
     schema: schemas_user.UserSchema = schemas_user.UserSchema()
     if user:
         return schema.dump(user), 200
-    return {"code": 404, "message": "User not found"}, 404
+    return {"code": 401, "message": "User not found"}, 401
 
 
 if __name__ == "__main__":

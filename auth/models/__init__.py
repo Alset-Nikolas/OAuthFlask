@@ -39,6 +39,6 @@ class UserModel(Base):
     last_name = Column(String)
 
     email = Column(EmailType)
-    phone = Column(String)
+    phone = Column(String, nullable=False)
     login = Column(String)
     date_login = Column(DateTime, default=datetime.datetime.utcnow)
