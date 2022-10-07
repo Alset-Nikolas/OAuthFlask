@@ -1,9 +1,7 @@
 from rauth import OAuth2Service
 from flask import request, redirect
 from multiple_oauth.oauth import OAuthSignIn
-from rauth.compat import parse_qsl
 import json
-import requests
 
 
 class YandexSignIn(OAuthSignIn):
@@ -40,18 +38,8 @@ class YandexSignIn(OAuthSignIn):
         }
 
         oauth_session = self.service.get_auth_session(data=data, decoder=parse_args)
-        print(oauth_session.adapters)
-        param = {
-                "FieldNames": ["Login", "Phone"]
-                    }
-   
-        user_info = oauth_session.get(
-            self.service.base_url,
-            params = {
-                
-                'FieldNames': ['Login']
-                
-            }
 
+        user_info = oauth_session.get(
+            self.service.base_url, params={"FieldNames": ["Login"]}
         ).json()
         return user_info

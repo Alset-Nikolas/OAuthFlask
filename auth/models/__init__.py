@@ -9,8 +9,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.operators import op
-from sqlalchemy_utils import EmailType, PhoneNumberType
-from sqlalchemy.orm import composite 
+from sqlalchemy_utils import EmailType
+from sqlalchemy.orm import composite
 import datetime
 
 DATABASE = {
@@ -35,10 +35,10 @@ class UserModel(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    email = Column(EmailType)
-    phone = Column(PhoneNumberType())
+    first_name = Column(String)
+    last_name = Column(String)
 
+    email = Column(EmailType)
+    phone = Column(String)
     login = Column(String)
     date_login = Column(DateTime, default=datetime.datetime.utcnow)
-
-
