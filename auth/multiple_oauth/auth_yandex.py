@@ -1,7 +1,8 @@
 from rauth import OAuth2Service
 from flask import request, redirect
-from multiple_oauth.oauth import OAuthSignIn
 import json
+from log import logger
+from multiple_oauth.oauth import OAuthSignIn, RottenTokenError
 
 
 class YandexSignIn(OAuthSignIn):
@@ -17,19 +18,24 @@ class YandexSignIn(OAuthSignIn):
         )
 
     def authorize(self):
-        return redirect(
-            self.service.get_authorize_url(
-                response_type="code",
-                client_id=self.service.client_id,
-            )
+        authorize_url = self.service.get_authorize_url(
+            response_type="code",
+            client_id=self.service.client_id,
         )
+        return redirect(authorize_url)
 
     def callback(self):
         def parse_args(s):
-            return json.loads(s)
+            params = json.loads(s)
+            if (
+                "error_description" in params
+                and params["error_description"] == "Code has expired"
+            ):
+                raise RottenTokenError(params["error_description"])
+            return params
 
         if "code" not in request.args:
-            return None
+            return
 
         data = {
             "code": request.args["code"],
@@ -38,8 +44,5 @@ class YandexSignIn(OAuthSignIn):
         }
 
         oauth_session = self.service.get_auth_session(data=data, decoder=parse_args)
-
-        user_info = oauth_session.get(
-            self.service.base_url, params={"FieldNames": ["Login"]}
-        ).json()
+        user_info = oauth_session.get(self.service.base_url).json()
         return user_info

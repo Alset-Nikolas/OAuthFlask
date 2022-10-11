@@ -29,4 +29,10 @@ class OAuthSignIn(object):
             for provider_class in self.__subclasses__():
                 provider = provider_class()
                 self.providers[provider.provider_name] = provider
-        return self.providers[provider_name]
+        if provider_name in self.providers:
+            return self.providers[provider_name]
+
+
+class RottenTokenError(Exception):
+    def __init__(self, text):
+        self.txt = text

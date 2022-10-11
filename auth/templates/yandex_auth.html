@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Github OAuth</title>
+    <title>Yandex OAuth</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> <!-- load bulma css -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
       <style>
@@ -21,11 +21,21 @@
               <div class="well">
                 <p>
                   <strong>login</strong>: {{ userData.login }}<br>
-                  <strong>email</strong>: {{ userData.default_email }}<br>
+                  <strong>email</strong>: {{ userData.email }}<br>
           
                 </p>
               </div>
             </div>
+        </div>
+        <div class="jumbotron text-center text-primary">
+          <h1>Take token by site</h1>
+          <form action='/api/get/user/add-site' method='get'>
+            <div class="form-group">
+              <label for="exampleInputEmail1">name site</label>
+              <input type="text" class="form-control" name="domain_name" aria-describedby="emailHelp" placeholder="site">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
         </div>
       </div>
     </div>
